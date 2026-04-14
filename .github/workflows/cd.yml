@@ -21,6 +21,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Force Node.js 24 for Docker actions
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     # -----------------------------------------------------
     # Condition: run this job only if CI has succeeded
