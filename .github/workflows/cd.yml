@@ -1,0 +1,57 @@
+# ---------------------------------------------------------
+# CD WORKFLOW - CI/CD Python Exam
+# ---------------------------------------------------------
+# This workflow:
+# 1. Runs automatically when the CI workflow has finished
+# 2. Only runs if CI has succeeded
+# 3. Builds and pushes a Docker image to Docker Hub
+# ---------------------------------------------------------
+
+name: CD   
+
+# ---------------------------------------------------------
+# Automatic trigerring after CI
+# ---------------------------------------------------------
+on:
+  workflow_run:
+    workflows: ["CI"]   
+    types:
+      - completed       # Triggers when the CI job has finished (whether successful or failed)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # -----------------------------------------------------
+    # Condition: run this job only if CI has succeeded
+    # -----------------------------------------------------
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+
+      # ------------------------------
+      # First step : code recovery
+      # ------------------------------
+      - name: checkout
+        uses: actions/checkout@v5
+
+      # ------------------------------
+      # Second step : Docker Hub connexion
+      # ------------------------------
+      - name: login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}   # GitHub secret
+          password: ${{ secrets.DOCKER_PASSWORD }}   # GitHub secret
+
+      # ------------------------------
+      # Third step : Build + Push Docker
+      # ------------------------------
+      - name: build and push
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .                     # Contexte = dossier racine
+          file: ./Dockerfile             # Dockerfile in the root directory
+          push: true                     # Push the image to Docker Hub
+          tags: ${{ secrets.DOCKER_USERNAME }}/mon-projet:latest   # Final Tag
