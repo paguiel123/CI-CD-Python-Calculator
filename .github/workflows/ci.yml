@@ -104,7 +104,7 @@ jobs:
       # Second step : Scan Trivy
       # ------------------------------
       - name: trivy FS mode
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@v0.35.0
 
         with:
           scan-type: fs              # Mode scan filesystem
