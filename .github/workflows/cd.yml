@@ -57,4 +57,4 @@ jobs:
           context: .                     # Contexte = dossier racine
           file: ./Dockerfile             # Dockerfile in the root directory
           push: true                     # Push the image to Docker Hub
-          tags: ${{ secrets.DOCKER_USERNAME }}/mon-projet:latest   # Final Tag
+          tags: ${{ secrets.DOCKER_USERNAME }}/calculator:latest   # Final Tag
